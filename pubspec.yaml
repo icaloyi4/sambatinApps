@@ -31,6 +31,8 @@ dependencies:
   shared_preferences: ^0.5.12+4
   http: ^0.12.1
   ff_navigation_bar: ^0.1.4
+  image_picker: ^0.6.6+5
+  autocomplete_textfield: ^1.7.3
 
 dev_dependencies:
   flutter_test:
