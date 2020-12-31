@@ -18,14 +18,14 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   SettingService settingService;
-  navigateDelay(String page, bool landing) async {
+  navigateDelay(String page) async {
     var _duration = new Duration(milliseconds: 3000);
     return new Timer(_duration, () {
       switch (page) {
         case NavigateName.login:
           return Navigator.of(context).pushReplacementNamed(page);
-        /*case NavigateName.home:
-          return Navigator.of(context).pushReplacementNamed(page);*/
+        case NavigateName.home:
+          return Navigator.of(context).pushReplacementNamed(page);
         default:
           throw 'Route $page is not defined';
       }
@@ -70,9 +70,9 @@ class _SplashScreenState extends State<SplashScreen> {
       var data = await settingService.get(MyConst.USER);
       if(data!=null){
         userData = UserResponse.fromJson(jsonDecode(data));
-//        navigateDelay(NavigateName.home, true);
+        navigateDelay(NavigateName.home);
       } else {
-        navigateDelay(NavigateName.login, true);
+        navigateDelay(NavigateName.login);
       }
     } catch (err) {
       print(err);

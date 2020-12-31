@@ -43,15 +43,15 @@ class ApiBaseHelper {
         print(responseJson);
         return responseJson;
       case 400:
-        throw BadRequestException(response.body.toString());
+        return json.decode(response.body.toString());
       case 401:
+        return json.decode(response.body.toString());
       case 403:
-        throw UnauthorisedException(response.body.toString());
+      return json.decode(response.body.toString());
       case 500:
+        return json.decode(response.body.toString());
       default:
-        throw FetchDataException(
-            'Error occured while Communication with Server with StatusCode : ${response
-                .statusCode}');
+      return json.decode(response.body.toString());
     }
   }
 }

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:sambatin/mvp/model/sign_in_model.dart';
 import 'package:sambatin/mvp/presenter/sign_in_presenter.dart';
 import 'package:sambatin/mvp/view/view.dart';
+import 'package:sambatin/utils/global_widget.dart';
+import 'package:sambatin/utils/my_images.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -36,7 +38,69 @@ class _LoginPageState extends State<LoginPage> implements SignInView {
                 body: Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
-                  color: Colors.white,)
+                  color: Colors.white,
+                  child: Column(
+                    children: [
+                      Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height * 30/100,
+
+                  decoration: new BoxDecoration(
+                      color: Colors.lightBlue,
+                      borderRadius: new BorderRadius.only(
+                        bottomLeft: const Radius.circular(20.0),
+                        bottomRight: const Radius.circular(20.0),
+                      )),
+                          child: Center(
+                            child: Container(
+                                width: 125,
+                                height: 125,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                    boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 8)]),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.asset(MyImages.mainLogoWhite),
+                              ),
+                            ),
+                          ),
+                      ),
+                      Expanded(
+                          child: Container(
+                            child: SingleChildScrollView(
+                              child: Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Column(
+                                  children: [
+                                    formLogin(),
+                                    btnForgot(),
+                                    m.isLogin?CircularProgressIndicator():btnLogin(),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                      children: [
+                                        line(100, 1.0, Colors.black12),
+                                        Text(
+                                          'Atau',
+                                        ),
+                                        line(100, 1.0, Colors.black12),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    btnRegister()
+                                  ],),
+                              ),
+                            ),
+                          ))
+                    ],)
+                  ,)
             )
         )
     );
@@ -154,7 +218,7 @@ class _LoginPageState extends State<LoginPage> implements SignInView {
 
   Widget btnForgot() {
     return GestureDetector(
-      child: Container(margin: EdgeInsets.all(10),child: Text('forgot password?',style: TextStyle(color: Colors.lightBlue, fontSize: 12),)),
+      child: Container(margin: EdgeInsets.all(10),child: Text('forgot password?',style: TextStyle( fontSize: 12),)),
     );
   }
 

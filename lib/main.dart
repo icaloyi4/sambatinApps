@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sambatin/splash_screen.dart';
+import 'file:///D:/Project/sambatin/lib/page/splash_screen.dart';
+import 'package:sambatin/utils/route.dart';
 
 void main() {
   runApp(MyApp());
@@ -27,6 +28,16 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
+        onGenerateRoute: (RouteSettings settings) {
+          return MaterialPageRoute(
+            builder: (BuildContext context) => makeRoute(
+                context: context,
+                routeName: settings.name,
+                arguments: settings.arguments),
+            maintainState: true,
+            fullscreenDialog: false,
+          );
+        },
       home: SplashScreen()
     );
   }

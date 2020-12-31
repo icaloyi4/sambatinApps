@@ -6,5 +6,5 @@ class MyConst{
   static const def_height_image_percent = 30/100;
   static const def_width_image_percent = 60/100;
   static const USER = 'user';
-  static const baseUrl = "";
+  static const baseUrl = "http://f766f32eee3f.ngrok.io/";
 }

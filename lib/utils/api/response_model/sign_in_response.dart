@@ -35,6 +35,7 @@ class Data {
   int roleId;
   String roleName;
   String tglLahir;
+  Null foto;
 
   Data(
       {this.id,
@@ -43,7 +44,8 @@ class Data {
         this.email,
         this.roleId,
         this.roleName,
-        this.tglLahir});
+        this.tglLahir,
+        this.foto});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -53,6 +55,7 @@ class Data {
     roleId = json['roleId'];
     roleName = json['roleName'];
     tglLahir = json['tgl_lahir'];
+    foto = json['foto'];
   }
 
   Map<String, dynamic> toJson() {
@@ -64,6 +67,7 @@ class Data {
     data['roleId'] = this.roleId;
     data['roleName'] = this.roleName;
     data['tgl_lahir'] = this.tglLahir;
+    data['foto'] = this.foto;
     return data;
   }
 }
