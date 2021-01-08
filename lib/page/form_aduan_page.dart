@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
@@ -9,6 +10,8 @@ import 'package:sambatin/mvp/presenter/form_aduan_presenter.dart';
 import 'package:sambatin/mvp/view/view.dart';
 import 'package:sambatin/utils/api/response_model/get_responder_responder.dart';
 import 'package:sambatin/utils/global_variable.dart';
+import 'package:sambatin/utils/route.dart';
+import 'package:signature/signature.dart';
 
 class FormAduanPage extends StatefulWidget {
   @override
@@ -21,6 +24,12 @@ class _FormAduanPageState extends State<FormAduanPage> implements FormAduanView 
 
   FormAduanModel m;
   TextEditingController searchController = new TextEditingController();
+  TextEditingController contentController = new TextEditingController();
+  final SignatureController _controller = SignatureController(
+    penStrokeWidth: 5,
+    penColor: Colors.black,
+    exportBackgroundColor: Colors.white,
+  );
 
   @override
   void initState() {
@@ -32,39 +41,44 @@ class _FormAduanPageState extends State<FormAduanPage> implements FormAduanView 
   @override
   Widget build(BuildContext context) {
     m.context = context;
+//    FocusScope.of(context).unfocus();
     return Container(
         color: Colors.lightBlue,
         child: SafeArea(
           child: Scaffold(
-  //        key: m.scaffoldKey,
+          key: m.scaffoldKey,
           backgroundColor: Colors.white,
-            body: Container(
-              child: Column(
-                children: [
-                  Container(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left:8.0, right: 8.0, top: 10.0, bottom: 10.0),
-                      child: Row(
-                        children: [
-                          Icon(Icons.clear_outlined, color: Colors.lightBlueAccent,),
-                          Expanded(child: Container(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Icon(Icons.account_circle),
-                                SizedBox(width: 5,),
-                                Text(userData.data[0].nama)
-                              ],
-                            ),
-                          )),
-                          btnPosting()
-                        ],),
+            body: GestureDetector(
+              onHorizontalDragDown: (details) => FocusScope.of(context).unfocus() ,
+//              onTap: () => FocusScope.of(context).unfocus(),
+              child: Container(
+                child: Column(
+                  children: [
+                    Container(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left:8.0, right: 8.0, top: 10.0, bottom: 10.0),
+                        child: Row(
+                          children: [
+                            Icon(Icons.clear_outlined, color: Colors.lightBlueAccent,),
+                            Expanded(child: Container(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.account_circle),
+                                  SizedBox(width: 5,),
+                                  Text(userData.data[0].nama)
+                                ],
+                              ),
+                            )),
+                            btnPosting()
+                          ],),
+                      ),
                     ),
-                  ),
-                  Expanded(
-                      child: SingleChildScrollView(child: formAduan(),))
-                ],),
+                    Expanded(
+                        child: SingleChildScrollView(child: formAduan(),))
+                  ],),
+              ),
             )
           )
         )
@@ -88,7 +102,7 @@ class _FormAduanPageState extends State<FormAduanPage> implements FormAduanView 
                   textInputAction: TextInputAction.next,
                   decoration: new InputDecoration(
                       hintText:
-                      "Search or Add Program",
+                      "Adukan kepada ...",
                       suffixIcon:
                       new Icon(Icons.search)),
                   itemSubmitted: (item) =>
@@ -128,6 +142,7 @@ class _FormAduanPageState extends State<FormAduanPage> implements FormAduanView 
                     keyboardType: TextInputType.multiline,
                   minLines: 1,//Normal textInputField will be displayed
                   maxLines: 10,
+                  controller: contentController,
                   decoration: InputDecoration(
                     labelStyle: TextStyle(color: Colors.lightBlue),
                     focusedBorder: InputBorder.none,
@@ -147,35 +162,90 @@ class _FormAduanPageState extends State<FormAduanPage> implements FormAduanView 
                 ),
               ),
             ),
+            Row(
+                  children: [
+                    m.foto==null
+                        ?Container():Expanded(
+                      child: Stack(
+                        children: [
+                      Card(
+                          elevation: 4,
+                          child: ClipRRect(borderRadius: BorderRadius.circular(8.0),child: Image.file(m.foto, width: MediaQuery.of(context).size.width, fit: BoxFit.fitHeight,))),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: GestureDetector(
+                            child: Container(
+                                width: 25,
+                                height: 25,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                    border: Border.all(color: Colors.red),
+                                    boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 8)]),
+                                child: Icon(Icons.clear_rounded, color: Colors.red,)
+                            ),
+                            onTap: () {
+                              setState(() {
+                                m.foto = null;
+                              });
+                            },
+                          ),
+                        ),
+                      )
+              ],),
+                    ),
+                    SizedBox(width: 10,),
+                    Expanded(child:
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text('Tanda Tangan', ),
+                      SizedBox(height: 10,),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            height: 200,
+                            width: 200,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.rectangle,
+                                border: Border(
+                                    bottom: BorderSide(
+                                      color: Colors.lightBlueAccent,
+                                    ))
+                            ),
+                            child: Column(
+                              children: [
+                                Text('Saya menyatakan informasi yang saya berikan benar adanya.', style: TextStyle(fontSize: 8),),
+                                Signature(
+                                  height: 150,
+                                  width: 200,
+                                  controller: _controller,
+//                            height: 300,
+                                  backgroundColor: Colors.white,
+                                ),
+                                Text(userData.data[0].nama)
+                              ],
+                            ),
+                          ),
+                          Align(alignment: Alignment.center,
+                              child: GestureDetector(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text('Hapus'),
+                                ),
+                                onTap: () => _controller.clear(),
+                              )
+                          ),
+                        ],),],))
+                  ],
+                ),
+            SizedBox(height: 10,),
             m.foto==null
                 ?btnAddPhoto()
-                :Stack(
-              children: [
-                Image.file(m.foto, width: MediaQuery.of(context).size.width, fit: BoxFit.fitHeight,),
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GestureDetector(
-                      child: Container(
-                        width: 25,
-                        height: 25,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.red),
-                            boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 8)]),
-                        child: Icon(Icons.clear_rounded, color: Colors.red,)
-                      ),
-                      onTap: () {
-                        setState(() {
-                          m.foto = null;
-                        });
-                      },
-                    ),
-                  ),
-                )
-              ],)
+                :Container()
           ],),
       ),
     );
@@ -195,7 +265,14 @@ class _FormAduanPageState extends State<FormAduanPage> implements FormAduanView 
           child: Align(alignment: Alignment.center,child: Text('Posting', style: TextStyle(color: Colors.white),)),
         ),
       ),
-//      onTap: () => p.login(),
+      onTap: () async {
+        if(_controller.isNotEmpty && m.selectedResponder!=null && contentController.text.isNotEmpty){
+          final bytes = await _controller.toPngBytes();
+          m.signature = base64Encode(bytes);
+          p.addContent(contentController.text);
+        }
+
+      },
     );
   }
 
@@ -221,9 +298,9 @@ class _FormAduanPageState extends State<FormAduanPage> implements FormAduanView 
     File image = await ImagePicker.pickImage(
         source: ImageSource.camera, imageQuality: 50
     );
-
     setState(() {
       m.foto = image;
+      m.fotBase64 = base64Encode(image.readAsBytesSync());
     });
   }
 

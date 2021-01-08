@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sambatin/mvp/view/view.dart';
 import 'package:sambatin/page/form_aduan_page.dart';
+import 'package:sambatin/page/form_signature.dart';
 import 'package:sambatin/page/home_page.dart';
 import 'package:sambatin/page/sign_in_page.dart';
 
@@ -11,6 +12,7 @@ class NavigateName {
   static const register = '/register';
   static const home = '/home';
   static const form_aduan = '/form-aduan';
+  static const form_signature = '/form-signature';
 }
 
 Widget makeRoute(
@@ -34,6 +36,8 @@ Widget _buildRoute({
       return HomePage();
     case NavigateName.form_aduan:
       return FormAduanPage();
+    case NavigateName.form_signature:
+      return FormSignaturePage();
     default:
       throw 'Route $routeName is not defined';
   }

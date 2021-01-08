@@ -48,16 +48,15 @@ class BasicSignInPresenter implements SignInPresenter {
     if(m.loginKey.currentState.validate()) {
       m.loginKey.currentState.save();
 
-      final userResponse = await _helper.post(
-          MyApiConst.login,
-          {},
-          {
-            'email' : m.email,
-            'password' : m.password,
-          }
-      );
-
       try {
+        final userResponse = await _helper.post(
+            MyApiConst.login,
+            {},
+            {
+              'email' : m.email,
+              'password' : m.password,
+            }
+        );
         userData = UserResponse.fromJson(userResponse);
         if(userData.data.isNotEmpty){
           await settingService.set(MyConst.USER, json.encode(userData));
